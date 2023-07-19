@@ -89,7 +89,7 @@ fn main() {
         [1,2,2,2,2,2,2,2,2,2,2,2,1],
     ];
 
-    let mut position = Position { x: 1, y: 0 };
+    let mut position = Position { x: 1, y: 15 };
 
     // 画面クリア
     println!("\x1b[2J");
@@ -121,9 +121,6 @@ fn main() {
 
         // field_bufferを見て、そのデータに従って、マスの表示を切り替え
         for y in 0..21 {
-            // if (&position.y + &y) > 20  {
-            //     break;
-            // }
             for x in 0..13 {
                 if field_buffer[y][x] == 1 {
                     print!("|");
@@ -139,5 +136,8 @@ fn main() {
         }
         // カーソルを再表示
         println!("\x1b[?25h");
+        if (position.y) == 21  {
+            break;
+        }
     }
 }
