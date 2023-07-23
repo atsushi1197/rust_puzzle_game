@@ -77,18 +77,25 @@ pub struct Position {
     pub y: usize
 }
 
+pub const INITIAL_POSITION: Position = Position { x: 5, y: 0};
+
+#[derive(Clone, Copy)]
 pub enum Direction {
     Down,
+    Up,
     Left,
     Right
 }
 
 impl Position {
     pub fn shift(&self, direction: Direction) -> Position {
+        let new_position = self.clone();
         match direction {
-            Direction::Down => Position { x: self.x, y: &self.y + 1 },
-            Direction::Left => Position { x: &self.x - 1, y: self.y },
-            Direction::Right => Position { x: &self.x + 1, y: self.y },
+            Direction::Down => Position { x: new_position.x, y: new_position.y + 1 },
+            // ブロックの落下限界を超えた場合に使用
+            Direction::Up => Position { x: new_position.x, y: new_position.y - 1 },
+            Direction::Left => Position { x: new_position.x - 1, y: new_position.y },
+            Direction::Right => Position { x: new_position.x + 1, y: new_position.y },
         }
     }
 }

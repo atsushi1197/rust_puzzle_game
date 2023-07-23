@@ -2,6 +2,8 @@ use crate::config::FIELD_WIDTH;
 use crate::config::FIELD_HEIGHT;
 use crate::config::Position;
 use crate::config::Field;
+use std::thread;
+use std::time::Duration;
 
 
 pub fn change_field(field_buffer: Field, block: [[usize; 4]; 4], position: &Position) -> Field {
@@ -41,7 +43,7 @@ pub fn render(field_buffer: &Field) {
 pub fn is_colliding(field: &Field, position: &Position, block: [[usize; 4]; 4]) -> bool {
     for y in 0..4 {
         for x in 0..4 {
-            if field[y + position.y + 1][x + position.x] & block[y][x] != 0 {
+            if field[y + position.y][x + position.x] & block[y][x] != 0 {
                 return true;
             }
         }
