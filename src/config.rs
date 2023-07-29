@@ -1,6 +1,12 @@
+use rand::{
+    distributions::{Distribution, Standard},
+    Rng,
+};
+
 pub const FIELD_WIDTH: usize = 11 + 2;
 pub const FIELD_HEIGHT: usize = 20 + 1;
 pub type Field = [[usize; FIELD_WIDTH]; FIELD_HEIGHT];
+
 
 #[derive(Clone, Copy)]
 
@@ -12,6 +18,20 @@ pub enum BlockKind {
     J,
     L,
     T,
+}
+
+impl Distribution<BlockKind> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> BlockKind {
+        match rng.gen_range(0..=6) {
+            0 => BlockKind::I,
+            1 => BlockKind::O,
+            2 => BlockKind::S,
+            3 => BlockKind::Z,
+            4 => BlockKind::J,
+            5 => BlockKind::L,
+            _ => BlockKind::T,
+        }
+    }
 }
 
 pub type BlockShape = [[usize; 4]; 4];
@@ -37,8 +57,8 @@ pub const BLOCKS: [BlockShape; 7] = [
     [
         [0,0,0,0],
         [0,0,0,0],
-        [0,3,3,0],
-        [0,3,3,0],
+        [3,3,0,0],
+        [3,3,0,0],
     ],
     [
         [0,0,0,0],
@@ -61,14 +81,14 @@ pub const BLOCKS: [BlockShape; 7] = [
     [
         [0,0,0,0],
         [0,0,0,0],
-        [0,0,0,3],
-        [0,3,3,3],
+        [0,0,3,0],
+        [3,3,3,0],
     ],
     [
         [0,0,0,0],
         [0,0,0,0],
-        [0,3,3,3],
-        [0,0,3,0],
+        [3,3,3,0],
+        [0,3,0,0],
     ],
 ];
 
@@ -89,13 +109,12 @@ pub enum Direction {
 
 impl Position {
     pub fn shift(&self, direction: Direction) -> Position {
-        let new_position = self.clone();
         match direction {
-            Direction::Down => Position { x: new_position.x, y: new_position.y + 1 },
+            Direction::Down => Position { x: self.x, y: &self.y + 1 },
             // ブロックの落下限界を超えた場合に使用
-            Direction::Up => Position { x: new_position.x, y: new_position.y - 1 },
-            Direction::Left => Position { x: new_position.x - 1, y: new_position.y },
-            Direction::Right => Position { x: new_position.x + 1, y: new_position.y },
+            Direction::Up => Position { x: self.x, y: &self.y - 1 },
+            Direction::Left => Position { x: &self.x - 1, y: self.y },
+            Direction::Right => Position { x: &self.x + 1, y: self.y },
         }
     }
 }
