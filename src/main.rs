@@ -4,7 +4,6 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use getch_rs::{Getch, Key};
-use config::Position;
 use config::FIELD;
 use config::INITIAL_POSITION;
 use config::Direction;
@@ -19,10 +18,12 @@ use func::is_horizontal_collision;
 use func::change_block_angle;
 use func::erase_full_filled_row;
 
+use func::is_game_over;
+
 
 fn main() {
     let block = Arc::new(Mutex::new(rand::random::<BlockKind>()));
-    let position = Arc::new(Mutex::new(Position { x: 4, y: 0 }));
+    let position = Arc::new(Mutex::new(INITIAL_POSITION));
     let field = Arc::new(Mutex::new(FIELD));
     let pause = Arc::new(Mutex::new(false));
     // 画面クリア
@@ -43,8 +44,15 @@ fn main() {
                 let mut position = position.lock().unwrap();
                 let mut block = block.lock().unwrap();
                 let mut field = field.lock().unwrap();
+                if is_game_over(&field) {
+                    // 画面クリア
+                    println!("\x1b[2J");
+                    println!("GAME OVER");
+                    // カーソルを再表示
+                    println!("\x1b[?25h");
+                    return;
+                }
                 *field = erase_full_filled_row(*field);
-                render(&field);
                 let new_position = position.shift(Direction::Down);
                 if is_reaching_bottom(new_position.y, *block) || is_touching_others(&field, &position, *block) {
                     *field = change_field(*field, *block, &position);
@@ -63,10 +71,8 @@ fn main() {
 
     let g = Getch::new();
     loop {
-        render(&field.lock().unwrap());
         match g.getch() {
             Ok(Key::Down) => {
-                render(&field.lock().unwrap());
                 let mut position = position.lock().unwrap();
                 let mut block = block.lock().unwrap();
                 let mut field = field.lock().unwrap();
@@ -142,7 +148,5 @@ fn main() {
             },
             _ => (),
         }
-
-        render(&field.lock().unwrap());
     }
 }
