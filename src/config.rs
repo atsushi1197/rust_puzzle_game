@@ -34,19 +34,12 @@ pub enum BlockKind {
 impl Distribution<BlockKind> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> BlockKind {
         match rng.gen_range(0..=1) {
-            0 => BlockKind::I1,
-            1 => BlockKind::I1,
-            2 => BlockKind::I1,
-            3 => BlockKind::I1,
-            4 => BlockKind::I1,
-            5 => BlockKind::I1,
-            _ => BlockKind::I1,
-            // 1 => BlockKind::O1,
-            // 2 => BlockKind::S1,
-            // 3 => BlockKind::Z1,
-            // 4 => BlockKind::J1,
-            // 5 => BlockKind::L1,
-            // _ => BlockKind::T1,
+            1 => BlockKind::O1,
+            2 => BlockKind::S1,
+            3 => BlockKind::Z1,
+            4 => BlockKind::J1,
+            5 => BlockKind::L1,
+            _ => BlockKind::T1,
         }
     }
 }
