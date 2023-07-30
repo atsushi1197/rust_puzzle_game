@@ -33,7 +33,7 @@ pub enum BlockKind {
 
 impl Distribution<BlockKind> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> BlockKind {
-        match rng.gen_range(0..=1) {
+        match rng.gen_range(0..=6) {
             1 => BlockKind::O1,
             2 => BlockKind::S1,
             3 => BlockKind::Z1,
