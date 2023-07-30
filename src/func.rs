@@ -142,11 +142,9 @@ pub fn erase_full_filled_row(current_field: Field) -> (Field, usize) {
 }
 
 pub fn is_game_over(current_field: &Field) -> bool {
-    for y in 0..2 {
-        for x in 1..FIELD_WIDTH - 1 {
-            if current_field[2][x] == 3 {
-                return true;
-            }
+    for x in 1..FIELD_WIDTH - 1 {
+        if current_field[2][x] == 3 {
+            return true;
         }
     }
     false
