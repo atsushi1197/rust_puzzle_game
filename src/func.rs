@@ -121,7 +121,7 @@ pub fn change_block_angle(current_block: BlockKind) -> BlockKind {
     }
 }
 
-pub fn erase_full_filled_row(current_field: Field) -> Field {
+pub fn erase_full_filled_row(current_field: Field) -> (Field, usize) {
     let mut new_field = current_field;
     let mut erased_count = 0;
     for y in (0..(FIELD_HEIGHT - 1)).rev() {
@@ -138,7 +138,7 @@ pub fn erase_full_filled_row(current_field: Field) -> Field {
             }
         }
     }
-    new_field
+    (new_field, erased_count)
 }
 
 pub fn is_game_over(current_field: &Field) -> bool {
@@ -150,4 +150,15 @@ pub fn is_game_over(current_field: &Field) -> bool {
         }
     }
     false
+}
+
+pub fn calc_score(current_score: usize ,erased_count: usize) -> usize {
+    match erased_count {
+        0 => current_score,
+        1 => current_score + 10,
+        2 => current_score + 30,
+        3 => current_score + 90,
+        4 => current_score + 160,
+        _ => current_score,
+    }
 }

@@ -20,11 +20,14 @@ use func::erase_full_filled_row;
 
 use func::is_game_over;
 
+use crate::func::calc_score;
+
 
 fn main() {
     let block = Arc::new(Mutex::new(rand::random::<BlockKind>()));
     let position = Arc::new(Mutex::new(INITIAL_POSITION));
     let field = Arc::new(Mutex::new(FIELD));
+    let score = Arc::new(Mutex::new(0));
     let pause = Arc::new(Mutex::new(false));
     // 画面クリア
     println!("\x1b[2J");
@@ -44,15 +47,19 @@ fn main() {
                 let mut position = position.lock().unwrap();
                 let mut block = block.lock().unwrap();
                 let mut field = field.lock().unwrap();
+                let mut score = score.lock().unwrap();
                 if is_game_over(&field) {
                     // 画面クリア
                     println!("\x1b[2J");
                     println!("GAME OVER");
+                    println!("YOUR SCORE: {}", *score);
                     // カーソルを再表示
                     println!("\x1b[?25h");
                     return;
                 }
-                *field = erase_full_filled_row(*field);
+                let result = erase_full_filled_row(*field);
+                *field = result.0;
+                *score = calc_score(*score, result.1);
                 let new_position = position.shift(Direction::Down);
                 if is_reaching_bottom(new_position.y, *block) || is_touching_others(&field, &position, *block) {
                     *field = change_field(*field, *block, &position);
@@ -65,6 +72,7 @@ fn main() {
                     let new_field = change_field(*field, *block, &position);
                     render(&new_field);
                 }
+                println!("score:{}", *score);
             }
         });
     }
