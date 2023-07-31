@@ -43,7 +43,7 @@ fn main() {
                 if *pause.lock().unwrap() {
                     continue;
                 }
-                thread::sleep(Duration::from_millis(1000));
+                thread::sleep(Duration::from_millis(2000));
                 let mut position = position.lock().unwrap();
                 let mut block = block.lock().unwrap();
                 let mut field = field.lock().unwrap();

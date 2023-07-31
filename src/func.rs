@@ -42,7 +42,7 @@ pub fn render(field: &Field) {
 }
 
 pub fn is_touching_wall(position_x: &usize, block: BlockKind) -> bool {
-    let mut right_end = 0;
+    let mut right_end = 1;
     for x in 0..4 {
         for y in 0..4 {
             if BLOCKS[block as usize][y][x] == 3 && x > right_end {
@@ -126,18 +126,21 @@ pub fn erase_full_filled_row(current_field: Field) -> (Field, usize) {
     let mut erased_count = 0;
     for y in (0..(FIELD_HEIGHT - 1)).rev() {
         if y - erased_count == 0 {
+            println!("breaking:{}", erased_count);
             break;
         }
-        for x in 1..(FIELD_WIDTH - 1) {
+        'x: for x in 1..(FIELD_WIDTH - 1) {
             if current_field[y - erased_count][x] == 0 {
                 new_field[y] = current_field[y - erased_count];
-                break;
-            } else if x >= FIELD_WIDTH - 3 {
+                break 'x;
+            } else if x == FIELD_WIDTH - 2 {
                 erased_count += 1;
                 new_field[y] = current_field[y - erased_count];
+                break 'x;
             }
         }
     }
+    println!("erased:{}", erased_count);
     (new_field, erased_count)
 }
 
