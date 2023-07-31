@@ -42,7 +42,7 @@ pub fn render(field: &Field) {
 }
 
 pub fn is_touching_wall(position_x: &usize, block: BlockKind) -> bool {
-    let mut right_end = 1;
+    let mut right_end = 0;
     for x in 0..4 {
         for y in 0..4 {
             if BLOCKS[block as usize][y][x] == 3 && x > right_end {
