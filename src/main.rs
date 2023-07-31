@@ -57,9 +57,9 @@ fn main() {
                     println!("\x1b[?25h");
                     return;
                 }
-                let result = erase_full_filled_row(*field);
+                let result = erase_full_filled_row(*field, *score);
                 *field = result.0;
-                *score = calc_score(*score, result.1);
+                *score = result.1;
                 let new_position = position.shift(Direction::Down);
                 if is_reaching_bottom(new_position.y, *block) || is_touching_others(&field, &position, *block) {
                     *field = change_field(*field, *block, &position);
@@ -131,6 +131,8 @@ fn main() {
                             *field = change_field(*field, *block, &position);
                             *block = rand::random();
                             *position = INITIAL_POSITION;
+                            render(&field);
+                        } else if is_horizontal_collision(&field, &position, *block) {
                             render(&field);
                         } else {
                             // posの座標を更新
