@@ -128,16 +128,11 @@ pub fn erase_full_filled_row(current_field: Field, current_score: usize) -> (Fie
         if y - erased_count == 0 {
             break;
         }
-        'x: for x in 1..(FIELD_WIDTH - 1) {
-            if current_field[y - erased_count][x] == 0 {
-                new_field[y] = current_field[y - erased_count];
-                break 'x;
-            } else if x == FIELD_WIDTH - 2 {
-                erased_count += 1;
-                new_field[y] = current_field[y - erased_count];
-                break 'x;
-            }
+        let index = current_field[y - erased_count].iter().any(|&item| item == 0);
+        if !index {
+            erased_count += 1;
         }
+        new_field[y] = current_field[y - erased_count];
     }
     let new_score = calc_score(current_score, erased_count);
     (new_field, new_score)

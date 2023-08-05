@@ -20,8 +20,6 @@ use func::erase_full_filled_row;
 
 use func::is_game_over;
 
-use crate::func::calc_score;
-
 
 fn main() {
     let block = Arc::new(Mutex::new(rand::random::<BlockKind>()));
