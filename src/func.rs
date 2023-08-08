@@ -121,21 +121,24 @@ pub fn change_block_angle(current_block: BlockKind) -> BlockKind {
     }
 }
 
-pub fn erase_full_filled_row(current_field: Field, current_score: usize) -> (Field, usize) {
-    let mut new_field = current_field;
+pub fn erase_full_filled_row(field: &mut Field) -> usize {
     let mut erased_count = 0;
-    for y in (0..(FIELD_HEIGHT - 1)).rev() {
-        if y - erased_count == 0 {
-            break;
+    for y in 1..FIELD_HEIGHT - 1 {
+        let mut can_erase = true;
+        for x in 1..FIELD_WIDTH - 1 {
+            if field[y][x] == 0 {
+                can_erase = false;
+                break;
+            }
         }
-        let index = current_field[y - erased_count].iter().any(|&item| item == 0);
-        if !index {
+        if can_erase {
             erased_count += 1;
+            for y2 in (2..=y).rev() {
+                field[y2] = field[y2 - 1];
+            }
         }
-        new_field[y] = current_field[y - erased_count];
     }
-    let new_score = calc_score(current_score, erased_count);
-    (new_field, new_score)
+    erased_count
 }
 
 pub fn is_game_over(current_field: &Field) -> bool {

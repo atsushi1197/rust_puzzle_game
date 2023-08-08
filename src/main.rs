@@ -20,6 +20,8 @@ use func::erase_full_filled_row;
 
 use func::is_game_over;
 
+use crate::func::calc_score;
+
 
 fn main() {
     let block = Arc::new(Mutex::new(rand::random::<BlockKind>()));
@@ -46,6 +48,8 @@ fn main() {
                 let mut block = block.lock().unwrap();
                 let mut field = field.lock().unwrap();
                 let mut score = score.lock().unwrap();
+                let erased_count = erase_full_filled_row(&mut field);
+                *score = calc_score(*score, erased_count);
                 if is_game_over(&field) {
                     // 画面クリア
                     println!("\x1b[2J");
@@ -55,9 +59,6 @@ fn main() {
                     println!("\x1b[?25h");
                     return;
                 }
-                let result = erase_full_filled_row(*field, *score);
-                *field = result.0;
-                *score = result.1;
                 let new_position = position.shift(Direction::Down);
                 if is_reaching_bottom(new_position.y, *block) || is_touching_others(&field, &position, *block) {
                     *field = change_field(*field, *block, &position);
