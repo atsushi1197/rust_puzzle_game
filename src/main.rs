@@ -123,7 +123,7 @@ fn main() {
                 let mut position = position.lock().unwrap();
                 let mut block = block.lock().unwrap();
                 let mut field = field.lock().unwrap();
-                if position.x + 1 != 13 {
+                if position.x + 1 < 13 {
                     let new_position = position.shift(Direction::Right);
                     if !is_touching_wall(&new_position.x, *block) {
                         if is_reaching_bottom(new_position.y, *block) || is_touching_others(&field, &position, *block) {
