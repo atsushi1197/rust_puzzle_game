@@ -84,7 +84,7 @@ pub fn is_touching_others(field: &Field, current_position: &Position, block: Blo
 pub fn is_horizontal_collision(field: &Field, current_position: &Position, block: BlockKind) -> bool {
     for y in 0..4 {
         for x in 0..4 {
-            if current_position.x + x + 1 > 12 {
+            if current_position.x + x + 1 > 12 || current_position.y + y + 1 > 20 {
                 continue;
             }
             if BLOCKS[block as usize][y][x] & field[current_position.y + y][current_position.x + x - 1] == 3
